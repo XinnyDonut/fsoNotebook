@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/notes/67608c6b3d6f2565f936a5f1
+Content-Type:application/json
+
+{
+    "content": "RestClient is not cool",
+    "important": true
+}
