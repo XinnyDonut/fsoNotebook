@@ -5,3 +5,13 @@ Content-Type:application/json
     "content":"Re is hard",
     "important":false
 }
+
+
+### test note that has validation error
+POST http://localhost:3001/api/notes/
+Content-Type:application/json
+
+{
+    "content":"Re",
+    "important":false
+}

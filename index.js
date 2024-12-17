@@ -75,7 +75,7 @@ let notes = [
     return String(maxId+1)
   }
 
-  app.post('/api/notes',(request,response)=>{
+  app.post('/api/notes',(request,response,next)=>{
     const body=request.body
     if(!body.content){
       return  response.status(400).json({error:'content missing'})
@@ -86,18 +86,18 @@ let notes = [
         important:body.important||false,
     })
 
-    note.save().then(savedNote=>{
-      response.json(savedNote)
-    })  
+    note.save()
+    .then(savedNote=>response.json(savedNote))
+    .catch(error=>next(error))
   })
   
   app.put('/api/notes/:id',(req,res,next)=>{
-    const body = req.body
-    const note = {
-      content: body.content,
-      important: body.important,
-    }
-    Note.findByIdAndUpdate(req.params.id,note,{new:true})
+    const{content,important}=req.body
+    Note.findByIdAndUpdate(
+      req.params.id,
+      {content,important},
+      {new:true,runValidators:true,context:'query'}
+    )
       .then(updatedNote=>{
         res.json(updatedNote)
       })
@@ -115,7 +115,10 @@ let notes = [
 
     if(error.name==='CastError'){
       return response.status(400).send({error:'malformatted id'})
+    }else if(error.name="ValidationError"){
+      return response.status(400).json({error:error.message})
     }
+
     next(error)
   }
   app.use(errorHandler)
