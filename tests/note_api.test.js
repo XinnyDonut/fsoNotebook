@@ -178,6 +178,8 @@ describe('when there is initially one user at db', () => {
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await helper.usersInDb()
+    // const indexes = await mongoose.connection.collection('users').listIndexes()
+    // console.log(indexes)
 
     assert(result.body.error.includes('expected `username` to be unique'))
 
